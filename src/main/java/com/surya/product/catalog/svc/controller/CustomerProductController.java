@@ -26,7 +26,6 @@ public class CustomerProductController {
 
     @GetMapping("/filter/products")
     public ResponseEntity<List<Product>> getProducts(@PathParam(value = "filter") String filter) throws InvalidInputException {
-
         System.out.println("Path param: " + filter);
         return productService.getProductDetails(filter);
     }
