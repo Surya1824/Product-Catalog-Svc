@@ -1,4 +1,4 @@
-package com.surya.product.catalog.svc;
+package com.surya.product.catalog.svc.controllerAdvice;
 
 import com.surya.product.catalog.svc.exception.InvalidInputException;
 import org.springframework.http.HttpStatus;

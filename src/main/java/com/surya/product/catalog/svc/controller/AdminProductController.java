@@ -1,5 +1,6 @@
 package com.surya.product.catalog.svc.controller;
 
+import com.surya.product.catalog.svc.exception.InvalidInputException;
 import com.surya.product.catalog.svc.model.Product;
 import com.surya.product.catalog.svc.service.ProductService;
 import jakarta.validation.Valid;
@@ -31,7 +32,7 @@ public class AdminProductController {
     }
 
     @DeleteMapping("/product/{Id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable(value = "Id") Integer id){
+    public ResponseEntity<String> deleteProduct(@PathVariable(value = "Id") Integer id) throws InvalidInputException {
         return productService.deleteProduct(id);
     }
 

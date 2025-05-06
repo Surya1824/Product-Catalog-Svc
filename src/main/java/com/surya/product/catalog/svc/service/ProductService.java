@@ -54,21 +54,21 @@ public class ProductService {
         }
     }
 
-    public ResponseEntity<List<Product>> getProductDetails(String filterValue) {
+    public ResponseEntity<List<Product>> getProductDetails(String filterValue) throws InvalidInputException {
         try{
             List<Product> products = productRepository.searchProducts(filterValue);
             return ResponseEntity.status(HttpStatus.OK).body(products);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new InvalidInputException("Invalid Input");
         }
     }
 
-    public ResponseEntity<Product> getProductDetail(Integer id){
+    public ResponseEntity<Product> getProductDetail(Integer id) throws InvalidInputException {
         try{
             Optional<Product> products = productRepository.findById(id);
             return ResponseEntity.status(HttpStatus.OK).body(products.orElse(null));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new InvalidInputException("Invalid Input");
         }
     }
 
@@ -81,12 +81,12 @@ public class ProductService {
         }
     }
 
-    public ResponseEntity<String> deleteProduct(Integer id) {
+    public ResponseEntity<String> deleteProduct(Integer id) throws InvalidInputException {
         try{
             productRepository.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).body("Product Deleted Successfully");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new InvalidInputException("Invalid Input");
         }
     }
 }
