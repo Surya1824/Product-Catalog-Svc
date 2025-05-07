@@ -1,5 +1,6 @@
 package com.surya.product.catalog.svc.controller;
 
+import com.surya.product.catalog.svc.exception.DAOException;
 import com.surya.product.catalog.svc.exception.InvalidInputException;
 import com.surya.product.catalog.svc.model.Product;
 import com.surya.product.catalog.svc.service.ProductService;
@@ -10,17 +11,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/customer")
-public class CustomerProductController {
+@RequestMapping("/user")
+public class UserProductController {
 
     private final ProductService productService;
 
-    public CustomerProductController(ProductService productService) {
+    public UserProductController(ProductService productService) {
         this.productService = productService;
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(){
+    public ResponseEntity<List<Product>> getProducts() throws DAOException{
         return productService.getProductDetails();
     }
 

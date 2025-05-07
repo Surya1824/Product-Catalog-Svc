@@ -1,6 +1,7 @@
 package com.surya.product.catalog.svc.service;
 
 import com.surya.product.catalog.svc.exception.InvalidInputException;
+import com.surya.product.catalog.svc.exception.DAOException;
 import com.surya.product.catalog.svc.repository.SubCategoryRepository;
 import com.surya.product.catalog.svc.model.SubCategory;
 import com.surya.product.catalog.svc.repository.ProductRepository;
@@ -45,12 +46,12 @@ public class ProductService {
         }
     }
 
-    public ResponseEntity<List<Product>> getProductDetails() {
+    public ResponseEntity<List<Product>> getProductDetails() throws DAOException {
         try{
             List<Product> products = productRepository.findAll();
             return ResponseEntity.status(HttpStatus.OK).body(products);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new DAOException(e.getMessage());
         }
     }
 
@@ -72,12 +73,12 @@ public class ProductService {
         }
     }
 
-    public ResponseEntity<String> updateProductDetails(Product product) {
+    public ResponseEntity<String> updateProductDetails(Product product) throws DAOException {
         try{
             productRepository.save(product);
             return ResponseEntity.status(HttpStatus.OK).body("Updated Product Details Successfully");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw  new DAOException(e.getMessage());
         }
     }
 
