@@ -43,24 +43,6 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long productId, String name, String brand, String description, String specification,
-                   Category category, SubCategory subCategory, Double originalPrice, Integer discount,
-                   Double discountPrice, Integer quantity, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.productId = productId;
-        this.name = name;
-        this.brand = brand;
-        this.description = description;
-        this.specification = specification;
-        this.category = category;
-        this.subCategory = subCategory;
-        this.originalPrice = originalPrice;
-        this.discount = discount;
-        this.discountPrice = discountPrice;
-        this.quantity = quantity;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
     public Long getProductId() {
         return productId;
     }
@@ -164,4 +146,14 @@ public class Product {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+	@Override
+	public String toString() {
+		return "Product [productId=" + productId + ", name=" + name + ", brand=" + brand + ", description="
+				+ description + ", specification=" + specification + ", category=" + category + ", subCategory="
+				+ subCategory + ", originalPrice=" + originalPrice + ", discount=" + discount + ", discountPrice="
+				+ discountPrice + ", quantity=" + quantity + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
+				+ "]";
+	}
+    
 }
