@@ -5,15 +5,21 @@ import com.surya.product.catalog.svc.exception.DAOException;
 import com.surya.product.catalog.svc.repository.SubCategoryRepository;
 import com.surya.product.catalog.svc.model.SubCategory;
 import com.surya.product.catalog.svc.repository.ProductRepository;
-
+import com.surya.product.catalog.svc.model.OperationEnum;
 import com.surya.product.catalog.svc.model.Product;
+import com.surya.product.catalog.svc.model.ProductMQMessage;
+
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -21,10 +27,13 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     private final SubCategoryRepository subCategoryRepository;
+    
+    private final ProductMQProducer producMQProducer;
 
-    public ProductService(ProductRepository productRepository, SubCategoryRepository subCategoryRepository) {
+    public ProductService(ProductRepository productRepository, SubCategoryRepository subCategoryRepository, ProductMQProducer producMQProducer) {
         this.productRepository = productRepository;
         this.subCategoryRepository = subCategoryRepository;
+		this.producMQProducer = producMQProducer;
     }
 
     public ResponseEntity<String> addProducts(@Valid List<Product> products) {
@@ -38,7 +47,14 @@ public class ProductService {
 
                 product.setSubCategory(subCategory);
             }
-            productRepository.saveAll(products);
+            List<Product> savedProducts = productRepository.saveAll(products);           	
+            
+            //Updating Inventory by MQ
+			List<ProductMQMessage> productMQMessages = savedProducts.stream().map(p -> {
+				return new ProductMQMessage(UUID.randomUUID().toString(), p.getProductId(), p.getName(), p.getBrand(),
+						p.getQuantity(), OperationEnum.CREATED, LocalDateTime.now());}).collect(Collectors.toList());
+			producMQProducer.updateInventory(productMQMessages);
+            
             return ResponseEntity.status(HttpStatus.CREATED).body("Products Added Successfully");
         } catch(Exception e) {
             System.out.println("Error: " + e);
@@ -75,16 +91,24 @@ public class ProductService {
 
     public ResponseEntity<String> updateProductDetails(Product product) throws DAOException {
         try{
-            productRepository.save(product);
+            Product updatedProduct = productRepository.save(product);
+            
+            producMQProducer.updateInventory(Arrays.asList(new ProductMQMessage(UUID.randomUUID().toString(),updatedProduct.getProductId(),updatedProduct.getName(),
+            		updatedProduct.getBrand(), updatedProduct.getQuantity(), OperationEnum.UPDATE,LocalDateTime.now())));
+            
             return ResponseEntity.status(HttpStatus.OK).body("Updated Product Details Successfully");
         } catch (Exception e) {
             throw  new DAOException(e.getMessage());
         }
     }
 
-    public ResponseEntity<String> deleteProduct(Integer id) throws InvalidInputException {
+    public ResponseEntity<String> deleteProduct(Long id) throws InvalidInputException {
         try{
-            productRepository.deleteById(id);
+            productRepository.deleteByProductId(id);
+            
+            producMQProducer.updateInventory(Arrays.asList(new ProductMQMessage(UUID.randomUUID().toString(),id,"Null", "Null",
+            	0l, OperationEnum.REMOVE,LocalDateTime.now())));
+            
             return ResponseEntity.status(HttpStatus.OK).body("Product Deleted Successfully");
         } catch (Exception e) {
             throw new InvalidInputException("Invalid Input");

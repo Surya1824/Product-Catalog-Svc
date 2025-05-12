@@ -18,4 +18,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             + "OR LOWER(p.category) LIKE LOWER(CONCAT('%', :query, '%')) "
             + "OR LOWER(sc.name) LIKE LOWER(CONCAT('%', :query, '%'))))")
     List<Product> searchProducts(@Param("query") String query);
+    
+    void deleteByProductId(Long productId);
 }

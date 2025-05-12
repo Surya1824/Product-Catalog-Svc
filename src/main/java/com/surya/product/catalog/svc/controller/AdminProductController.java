@@ -51,7 +51,7 @@ public class AdminProductController {
     }
 
     @DeleteMapping("/product/{Id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable(value = "Id") Integer id,@RequestHeader(name = "User-Type") String userType) throws InvalidInputException, RoleMismatchError {
+    public ResponseEntity<String> deleteProduct(@PathVariable(value = "Id") Long id,@RequestHeader(name = "User-Type") String userType) throws InvalidInputException, RoleMismatchError {
         if(userType.equalsIgnoreCase(ADMIN_ROLE)){
             System.out.println("Product Id: " + id);
             return productService.deleteProduct(id);

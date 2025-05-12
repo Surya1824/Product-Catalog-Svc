@@ -34,7 +34,7 @@ public class Product {
     private Integer discount;
     private Double discountPrice;
     @NotNull(message = "Product Quantity shouldn't be null")
-    private Integer quantity;
+    private Long quantity;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
@@ -123,11 +123,11 @@ public class Product {
         this.discountPrice = discountPrice;
     }
 
-    public Integer getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 
