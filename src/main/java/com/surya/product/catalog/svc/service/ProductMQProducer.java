@@ -6,7 +6,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import com.surya.product.catalog.svc.config.RabbitConfig;
-import com.surya.product.catalog.svc.model.ProductMQMessage;
+import com.surya.product.catalog.svc.model.Inventory;
 
 
 @Service
@@ -18,7 +18,7 @@ public class ProductMQProducer {
         this.rabbitTemplate = rabbitTemplate;
     }
     
-    public void updateInventory(List<ProductMQMessage> productMessage){
+    public void updateInventory(List<Inventory> productMessage){
         rabbitTemplate.convertAndSend(RabbitConfig.EXCHANGE, RabbitConfig.ROUTING_KEY, productMessage);
     }
 

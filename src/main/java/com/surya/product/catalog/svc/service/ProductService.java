@@ -5,9 +5,9 @@ import com.surya.product.catalog.svc.exception.DAOException;
 import com.surya.product.catalog.svc.repository.SubCategoryRepository;
 import com.surya.product.catalog.svc.model.SubCategory;
 import com.surya.product.catalog.svc.repository.ProductRepository;
+import com.surya.product.catalog.svc.model.Inventory;
 import com.surya.product.catalog.svc.model.OperationEnum;
 import com.surya.product.catalog.svc.model.Product;
-import com.surya.product.catalog.svc.model.ProductMQMessage;
 
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -50,8 +50,8 @@ public class ProductService {
             List<Product> savedProducts = productRepository.saveAll(products);           	
             
             //Updating Inventory by MQ
-			List<ProductMQMessage> productMQMessages = savedProducts.stream().map(p -> {
-				return new ProductMQMessage(UUID.randomUUID().toString(), p.getProductId(), p.getName(), p.getBrand(),
+			List<Inventory> productMQMessages = savedProducts.stream().map(p -> {
+				return new Inventory(UUID.randomUUID().toString(), p.getProductId(), p.getName(), p.getBrand(),
 						p.getQuantity(), OperationEnum.CREATED, LocalDateTime.now());}).collect(Collectors.toList());
 			producMQProducer.updateInventory(productMQMessages);
             
@@ -93,7 +93,7 @@ public class ProductService {
         try{
             Product updatedProduct = productRepository.save(product);
             
-            producMQProducer.updateInventory(Arrays.asList(new ProductMQMessage(UUID.randomUUID().toString(),updatedProduct.getProductId(),updatedProduct.getName(),
+            producMQProducer.updateInventory(Arrays.asList(new Inventory(UUID.randomUUID().toString(),updatedProduct.getProductId(),updatedProduct.getName(),
             		updatedProduct.getBrand(), updatedProduct.getQuantity(), OperationEnum.UPDATE,LocalDateTime.now())));
             
             return ResponseEntity.status(HttpStatus.OK).body("Updated Product Details Successfully");
@@ -106,7 +106,7 @@ public class ProductService {
         try{
             productRepository.deleteByProductId(id);
             
-            producMQProducer.updateInventory(Arrays.asList(new ProductMQMessage(UUID.randomUUID().toString(),id,"Null", "Null",
+            producMQProducer.updateInventory(Arrays.asList(new Inventory(UUID.randomUUID().toString(),id,"Null", "Null",
             	0l, OperationEnum.REMOVE,LocalDateTime.now())));
             
             return ResponseEntity.status(HttpStatus.OK).body("Product Deleted Successfully");

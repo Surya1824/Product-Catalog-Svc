@@ -4,25 +4,25 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class ProductMQMessage {
+public class Inventory {
 	
 	private String messageId;
 	private Long productId;
 	private String productName;
 	private String productBrand;
 	private Long quantity;
-	private OperationEnum oprationEnum;
+	private OperationEnum operationEnum;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime createdAt;
 
-	public ProductMQMessage(String messageId, Long productId, String productName, String productBrand, Long quantity, OperationEnum oprationEnum, LocalDateTime createdAt) {
+	public Inventory(String messageId, Long productId, String productName, String productBrand, Long quantity, OperationEnum operationEnum, LocalDateTime createdAt) {
 		super();
 		this.messageId = messageId;
 		this.productId = productId;
 		this.productName = productName;
 		this.productBrand = productBrand;
 		this.quantity = quantity;
-		this.oprationEnum = oprationEnum;
+		this.operationEnum = operationEnum;
 		this.createdAt = createdAt;
 	}
 	
@@ -69,13 +69,15 @@ public class ProductMQMessage {
 		this.quantity = quantity;
 	}
 
-	public OperationEnum getOprationEnum() {
-		return oprationEnum;
+	public OperationEnum getOperationEnum() {
+		return operationEnum;
 	}
 
-	public void setOprationEnum(OperationEnum oprationEnum) {
-		this.oprationEnum = oprationEnum;
+
+	public void setOperationEnum(OperationEnum operationEnum) {
+		this.operationEnum = operationEnum;
 	}
+
 
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
@@ -89,7 +91,7 @@ public class ProductMQMessage {
 	@Override
 	public String toString() {
 		return "ProductMQMessage [messageId=" + messageId + ", productId=" + productId + ", productName=" + productName
-				+ ", productBrand=" + productBrand + ", quantity=" + quantity + ", oprationEnum=" + oprationEnum
+				+ ", productBrand=" + productBrand + ", quantity=" + quantity + ", oprationEnum=" + operationEnum
 				+ ", createdAt=" + createdAt + "]";
 	}
     
