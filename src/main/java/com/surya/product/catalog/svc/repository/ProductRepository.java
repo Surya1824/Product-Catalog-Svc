@@ -2,9 +2,11 @@ package com.surya.product.catalog.svc.repository;
 
 import com.surya.product.catalog.svc.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,5 +21,10 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             + "OR LOWER(sc.name) LIKE LOWER(CONCAT('%', :query, '%'))))")
     List<Product> searchProducts(@Param("query") String query);
     
-    void deleteByProductId(Long productId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM Product WHERE productId = :productId")
+    int deleteByProductId(@Param("productId") Long productId);
+
 }

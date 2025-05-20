@@ -104,7 +104,7 @@ public class ProductService {
 
     public ResponseEntity<String> deleteProduct(Long id) throws InvalidInputException {
         try{
-            productRepository.deleteByProductId(id);
+            productRepository.deleteByProductId(id);;
             
             producMQProducer.updateInventory(Arrays.asList(new Inventory(UUID.randomUUID().toString(),id,"Null", "Null",
             	0l, OperationEnum.REMOVE,LocalDateTime.now())));
