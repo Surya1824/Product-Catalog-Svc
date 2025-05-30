@@ -12,7 +12,11 @@ import java.time.LocalDateTime;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "product_sequence",
+    sequenceName = "product_sequence",
+    allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+    generator = "product_sequence")
     private Long productId;
     @NotNull(message = "Product Name shouldn't be null")
     @Column(unique = true)
@@ -26,7 +30,7 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Category category;
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = true)
     @JoinColumn(name = "sub_category_id")
     private SubCategory subCategory;
     @NotNull(message = "Product originalPrice Name shouldn't be null")
